@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:todo_ex_app/view/home_view.dart';
+import 'package:todo_ex_app/view/tabbar_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -214,7 +215,7 @@ class _LoginViewState extends State<LoginView> {
           onPressed: () {
             saveStorage();
             Get.back();
-            Get.to(HomeView()); // 아규먼트 안 쓰고 겟을 쓰는 건 나중에나중에 그 정보를 쓸때 이용함.
+            Get.to(TabbarView()); // 아규먼트 안 쓰고 겟을 쓰는 건 나중에나중에 그 정보를 쓸때 이용함.
           }, 
           child: Text("Exit"),
         ),

@@ -3,10 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 
 import 'package:todo_ex_app/view/add_view.dart';
-
-// ★ 추가 : TabbarView import
-import 'package:todo_ex_app/view/tabbar_view.dart';
-
+import 'package:todo_ex_app/view/login_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,7 +26,7 @@ class MyApp extends StatelessWidget {
         // ★ 앱 시작 시 TabbarView 실행
         GetPage(
           name: '/',
-          page: () => const TabbarView(),
+          page: () => const LoginView(),
         ),
 
         // AddView 이동 경로
@@ -40,7 +37,7 @@ class MyApp extends StatelessWidget {
       ],
 
       title: 'Flutter Demo',
-
+      locale: const Locale('ko', 'KR'),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
