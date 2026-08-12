@@ -252,12 +252,12 @@ class _HomeViewState extends State<HomeView> {
                         } else if (index == 2) {
 
                           // 지도 메뉴 → MapView
-                          widget.changeTab(3);
+                          widget.changeTab(2);
 
                         } else {
 
                           // 포토 메뉴 → CameraView
-                          widget.changeTab(4);
+                          widget.changeTab(3);
                         }
                       },
 
