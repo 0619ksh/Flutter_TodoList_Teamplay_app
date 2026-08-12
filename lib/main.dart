@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:todo_ex_app/view/add_view.dart';
 import 'package:todo_ex_app/view/login_view.dart';
 
+import 'view/map_view.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -17,6 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
 
       // ★ 첫 화면 경로
       initialRoute: '/',
