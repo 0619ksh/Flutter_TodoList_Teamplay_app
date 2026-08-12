@@ -214,7 +214,7 @@ class _LoginViewState extends State<LoginView> {
           onPressed: () {
             saveStorage();
             Get.back();
-            Get.to(HomeView()); // 아규먼트 안 쓰고 겟을 쓰는 건 나중에나중에 그 정보를 쓸때 이용함.
+            // Get.to(HomeView()); // 아규먼트 안 쓰고 겟을 쓰는 건 나중에나중에 그 정보를 쓸때 이용함.
           }, 
           child: Text("Exit"),
         ),
