@@ -115,6 +115,9 @@ class _HomeViewState extends State<HomeView> {
           crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
+            SizedBox(
+              height: 30,
+            ),
 
             Text(
               '안녕하세요, $userId 님 👋',
