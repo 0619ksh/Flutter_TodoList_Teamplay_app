@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+// ★ 각 화면 파일 import
+import 'package:todo_ex_app/view/home_view.dart';
+import 'package:todo_ex_app/view/today_view.dart';
+import 'package:todo_ex_app/view/map_view.dart';
+import 'package:todo_ex_app/view/camera_view.dart';
+import 'package:todo_ex_app/view/calendar_view.dart';
 
 class TabbarView extends StatefulWidget {
   const TabbarView({super.key});
@@ -19,40 +25,30 @@ class _TabbarViewState extends State<TabbarView> {
 
       child: Scaffold(
 
-        // ★ 각 탭을 눌렀을 때 보여줄 화면
+        // ★ 실제 페이지 연결
         body: TabBarView(
           children: [
 
-            // 0번 : 홈
-            Center(
-              child: Text('Home'),
-            ),
+            // ★ 0번 : 홈
+            HomeView(),
 
-            // 1번 : 할일
-            Center(
-              child: Text('Today'),
-            ),
+            // ★ 1번 : 할일
+            TodayView(),
 
-            // 2번 : 캘린더
-            Center(
-              child: Text('Calendar'),
-            ),
+            // ★ 2번 : 캘린더
+            CalendarView(),
 
-            // 3번 : 지도
-            Center(
-              child: Text('Map'),
-            ),
+            // ★ 3번 : 지도
+            MapView(),
 
-            // 4번 : 카메라
-            Center(
-              child: Text('Camera'),
-            ),
+            // ★ 4번 : 카메라
+            CameraView(),
           ],
         ),
 
 
         // =====================================================
-        // ★★★ 여기부터 TabBar 디자인 ★★★
+        // TabBar 디자인
         // =====================================================
 
         bottomNavigationBar: Container(
@@ -61,21 +57,22 @@ class _TabbarViewState extends State<TabbarView> {
 
           child: TabBar(
 
-            // ★ 선택된 아이콘 + 글자 색
+            // 선택된 아이콘 + 글자 색
             labelColor: Theme.of(context).colorScheme.primary,
 
-            // ★ 선택되지 않은 아이콘 + 글자 색
+            // 선택되지 않은 아이콘 + 글자 색
             unselectedLabelColor: Color(0xFFADB5C2),
 
-            // ★ 기본적으로 생기는 TabBar 밑줄 색깔
+            // 기본적으로 생기는 TabBar 밑줄 색깔
             indicatorColor: Theme.of(context).colorScheme.primary,
 
-            // ★ 글자 디자인
+            // 선택된 글자 디자인
             labelStyle: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
             ),
 
+            // 선택되지 않은 글자 디자인
             unselectedLabelStyle: TextStyle(
               fontSize: 12,
             ),
@@ -138,10 +135,6 @@ class _TabbarViewState extends State<TabbarView> {
             ],
           ),
         ),
-
-        // =====================================================
-        // ★★★ TabBar 끝 ★★★
-        // =====================================================
       ),
     );
   }
