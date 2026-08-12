@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:todo_ex_app/view/home_view.dart';
 import 'package:todo_ex_app/view/today_view.dart';
-import 'package:todo_ex_app/view/calendar_view.dart';
+// import 'package:todo_ex_app/view/calendar_view.dart';
 import 'package:todo_ex_app/view/map_view.dart';
 import 'package:todo_ex_app/view/camera_view.dart';
 
@@ -47,7 +47,7 @@ class _TabbarViewState extends State<TabbarView> {
         children: [
           HomeView(changeTab: changeTab),
           const TodayView(),
-          const CalendarView(),
+          // const CalendarView(),
           const MapView(),
           const CameraView(),
         ],
@@ -95,30 +95,30 @@ class _TabbarViewState extends State<TabbarView> {
 
             // ---------------- 캘린더 ----------------
 
-            GestureDetector(
-              onTap: () {
-                changeTab(2);
-              },
+            // GestureDetector(
+            //   onTap: () {
+            //     changeTab(2);
+            //   },
 
-              child: tabItem(
-                Icons.calendar_today_outlined,
-                '캘린더',
-                2,
-              ),
-            ),
+            //   child: tabItem(
+            //     Icons.calendar_today_outlined,
+            //     '캘린더',
+            //     2,
+            //   ),
+            // ),
 
 
             // ---------------- 지도 ----------------
 
             GestureDetector(
               onTap: () {
-                changeTab(3);
+                changeTab(2);
               },
 
               child: tabItem(
                 Icons.location_on_outlined,
                 '지도',
-                3,
+                2,
               ),
             ),
 
@@ -127,13 +127,13 @@ class _TabbarViewState extends State<TabbarView> {
 
             GestureDetector(
               onTap: () {
-                changeTab(4);
+                changeTab(3);
               },
 
               child: tabItem(
                 Icons.camera_alt_outlined,
                 '카메라',
-                4,
+                3,
               ),
             ),
           ],
