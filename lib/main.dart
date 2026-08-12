@@ -5,9 +5,6 @@ import 'package:get/get.dart';
 import 'package:todo_ex_app/view/add_view.dart';
 import 'package:todo_ex_app/view/login_view.dart';
 
-// ★ 추가 : TabbarView import
-import 'package:todo_ex_app/view/tabbar_view.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -42,7 +39,7 @@ class MyApp extends StatelessWidget {
       ],
 
       title: 'Flutter Demo',
-
+      locale: const Locale('ko', 'KR'),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
