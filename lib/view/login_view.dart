@@ -44,121 +44,150 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-// 상단 내용          
-            SizedBox(height: 80),
-            ElevatedButton(
-              onPressed: () {
-                
-              },
-              child: Text('HARU PLAN'),
-            ),
-            Text(
-              "반가워요!\n"
-              "오늘도 한 걸음 더",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "하루플랜과 함께 정돈된 하루를 설계해보세요",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 100),
-// 아이디/ 비번입력란            
-            Text(
-              "아이디",
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TextField(
-              controller: userIdController,
-              decoration: InputDecoration(
-                hintText: "apple", 
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12,),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color:Colors.white),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.blue, width: 1.5),
-                ),
-              ),
-            ),
-            SizedBox(height: 8,),
-            Text(
-              "비밀번호",
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            TextField(
-              controller: userIdController,
-              decoration: InputDecoration(
-                hintText: "········", 
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12,),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color:Colors.white),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.blue, width: 1.5),
-                ),
-              ),
-            ),
-            SizedBox(height: 8),
-            Text('비밀번호를 잊으셨나요?',
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 100),
-// 로그인 버튼                        
-            ElevatedButton(
-              onPressed: () => checkData(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-              ),  
-              child: Text(
-                '로그인',
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '아직 회원이 아니신가요?',
-                  style: TextStyle(
-                    color: Colors.grey, 
-                    fontWeight: FontWeight.bold,
-                    fontSize: 10),
+            // 상단 타이틀         
+                  SizedBox(height: 50),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                Text(
-                  '회원가입',
+                    child: Text('HARU PLAN',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "반가워요!\n"
+                    "오늘도 한 걸음 더",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "하루플랜과 함께 정돈된 하루를 설계해보세요",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 100),
+            // 아이디/ 비번입력란            
+                  Text(
+                    "아이디",
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: userIdController,
+                      decoration: InputDecoration(
+                        hintText: "apple", 
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12,),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color:Colors.white),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.blue, width: 1.5),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8,),
+                  Text(
+                    "비밀번호",
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        hintText: "········", 
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12,),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color:Colors.white),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.blue, width: 1.5),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text('비밀번호를 잊으셨나요?',
                   style: TextStyle(
-                    color: Colors.blueAccent, 
+                    fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    fontSize: 10),
-                ),
-              ],
-            )
-          ],
-        ),      
+                    ),
+                  ),
+                  SizedBox(height: 120),
+            // 로그인 버튼                        
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () => checkData(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(8),
+                        ),
+                      ),  
+                      child: Text(
+                        '로그인',
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '아직 회원이 아니신가요?',
+                          style: TextStyle(
+                            color: Colors.grey, 
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10),
+                            ),
+                        Text(
+                          '회원가입',
+                          style: TextStyle(
+                            color: Colors.blueAccent, 
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+          ),
+        ),
+      ),      
     );
   } // build
 
@@ -167,7 +196,7 @@ class _LoginViewState extends State<LoginView> {
     if(userIdController.text.trim().isEmpty || passwordController.text.trim().isEmpty){
       errorSnackBar();
     }else{
-      if(userIdController.text.trim() == 'apple' && passwordController.text.trim() == "········"){
+      if(userIdController.text.trim() == 'apple' && passwordController.text.trim() == "1234"){
         _showDialog();
       }else{
         checkSnackBar();
@@ -177,7 +206,7 @@ class _LoginViewState extends State<LoginView> {
 
   void _showDialog(){
     Get.defaultDialog(
-      title: "환영합니다",
+      title: "반갑습니다",
       middleText: "확인되었습니다.",
       barrierDismissible: false,
       actions: [
@@ -203,7 +232,7 @@ class _LoginViewState extends State<LoginView> {
   void errorSnackBar(){
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content : Text('사용자의 ID와 암호를 모두 입력하세요'),
+        content : Text('사용자의 아이디와 비밀번호를 모두 입력하세요'),
         duration : Duration(seconds: 2),
         backgroundColor: Colors.red,
       )
