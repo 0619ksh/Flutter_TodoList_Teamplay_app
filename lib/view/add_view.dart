@@ -41,9 +41,19 @@ class _AddViewState extends State<AddView> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
+      backgroundColor: colorScheme.tertiary,
       appBar: AppBar(
-        title: Text("할 일 추가"),
+        title: Text(
+          "할 일 추가",
+          style: TextStyle(
+            fontWeight: FontWeight.bold
+          ),
+        ),
+        backgroundColor: colorScheme.secondary,
+        foregroundColor: colorScheme.onSecondary,
       ),
 
       body: SingleChildScrollView(
@@ -52,6 +62,8 @@ class _AddViewState extends State<AddView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: 50),
+
               // 할 일 입력 TextField
               TextField(
                 controller: todoController,
@@ -61,10 +73,21 @@ class _AddViewState extends State<AddView> {
                 maxLines: 1,
               ),
               SizedBox(height: 30),
+
               // 날짜 선택 버튼 -> showDatePicker
               ElevatedButton(
                 onPressed: () => displayDatePicker(),
-                child: Text("날짜 선택")
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorScheme.primary,
+                  foregroundColor: colorScheme.onPrimary,
+                  minimumSize: Size(110, 45)
+                ),
+                child: Text(
+                  "날짜 선택",
+                  style: TextStyle(
+                    fontSize: 17
+                  ),
+                )
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -76,6 +99,7 @@ class _AddViewState extends State<AddView> {
                   ),
                 ),
               ),
+
               // 시간 선택
               Text(
                 "시간 선택",
@@ -96,6 +120,7 @@ class _AddViewState extends State<AddView> {
                     width: 300,
                     height: 200,
                     child: CupertinoDatePicker(
+                      backgroundColor: colorScheme.secondaryContainer,
                       mode: CupertinoDatePickerMode.time,
                       initialDateTime: DateTime.now(),
                       use24hFormat: false,
@@ -107,6 +132,7 @@ class _AddViewState extends State<AddView> {
                   ),
                 ),
               ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -137,20 +163,32 @@ class _AddViewState extends State<AddView> {
                   )
                 ],
               ),
-              // 할 일 추가
+
+              // 추가 버튼
               Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(30.0),
                 child: ElevatedButton(
                   onPressed: () {
                     if(todoController.text.trim().isEmpty) {
-                      showErrorSnackbar();
+                      showErrorSnackbar(colorScheme);
                       return;
                     }
                     
                     saveTodo();
                     Get.back();
                   },
-                  child: Text("추가하기")
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colorScheme.primary,
+                    foregroundColor: colorScheme.onPrimary,
+                    minimumSize: Size(200, 50)
+                  ),
+                  child: Text(
+                    "추가하기",
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold
+                    ),
+                  )
                 ),
               )
             ],
@@ -166,7 +204,7 @@ class _AddViewState extends State<AddView> {
     final firstSelectable = DateTime(
       selectedDate.year, selectedDate.month, selectedDate.day
     );
-    final lastYear = DateTime(firstSelectable.year + 5);
+    final lastYear = DateTime(firstSelectable.year + 10);
 
     final date = await showDatePicker(
       context: context,
@@ -184,9 +222,13 @@ class _AddViewState extends State<AddView> {
   }
 
   // 할 일을 입력하지 않았을 때 Snackbar 출력
-  void showErrorSnackbar() {
+  void showErrorSnackbar(ColorScheme colorScheme) {
     Get.snackbar(
-      "경고", "할 일을 입력하세요"
+      "경고", "할 일을 입력하세요",
+      snackPosition: SnackPosition.BOTTOM,
+      duration: Duration(seconds: 2),
+      backgroundColor: colorScheme.error,
+      colorText: colorScheme.onError
     );
   }
 
