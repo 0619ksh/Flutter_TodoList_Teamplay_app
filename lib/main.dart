@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
-import 'package:todo_ex_app/view/login_view.dart';
+import 'package:todo_ex_app/view/test.dart';
+// import 'package:todo_ex_app/view/login_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,12 +22,12 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: [
         Locale('ko', 'KR'),
-        Locale('en', 'US')
+        // Locale('en', 'US')
       ],
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const LoginView(),
+      home: const Test(),
     );
   }
 }
