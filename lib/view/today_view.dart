@@ -14,24 +14,15 @@ class _TodayViewState extends State<TodayView> {
   DateTime selectedDate = DateTime.now();
   final box = GetStorage();
 
-  // 할 일 객체 리스트
+  // 샘플 데이터 삭제 후 빈 리스트로 초기화
   List<TodoList> todoItems = [];
 
-  @override
-  void initState() {
-    super.initState();
-    // 앱 시작 시 저장된 데이터 불러오기 (배우신 initState 생명주기 활용)
-    _loadSavedTodoFromStorage();
-  }
-
-  // 날짜 필터링 (기존 조건문 유지)
   List<TodoList> get filteredTodoItems {
     String formattedSelectedDate =
         '${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}';
     return todoItems.where((todo) => todo.date == formattedSelectedDate).toList();
   }
 
-  // showDatePicker를 활용한 날짜 선택 기능
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -138,7 +129,7 @@ class _TodayViewState extends State<TodayView> {
               ),
               const SizedBox(height: 20),
 
-              // 필터링된 할 일 목록 (ListView.builder)
+              // 필터링된 할 일 목록
               Expanded(
                 child: filteredTodoItems.isEmpty
                     ? Center(
@@ -164,10 +155,9 @@ class _TodayViewState extends State<TodayView> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // AddView 화면으로 이동 후 돌아올 때까지 대기 (Get.toNamed)
+          // AddView 화면으로 이동 후 돌아올 때까지 대기
           await Get.toNamed('/add');
-          
-          // 복귀 후 GetStorage 데이터 확인 및 리스트 추가
+          // 복귀 후 GetStorage 데이터 확인 및 추가
           _loadSavedTodoFromStorage();
         },
         backgroundColor: colorScheme.primary,
@@ -218,7 +208,7 @@ class _TodayViewState extends State<TodayView> {
         ),
         child: Row(
           children: [
-            // 체크박스 (GestureDetector / setState)
+            // 체크박스
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -254,12 +244,10 @@ class _TodayViewState extends State<TodayView> {
                 children: [
                   Row(
                     children: [
-                      // ... (스프레드 연산자) 대신 배우신 일반 if 문 사용
-                      if (todo.isImportant)
+                      if (todo.isImportant) ...[
                         Icon(Icons.star, size: 16, color: colorScheme.primary),
-                      if (todo.isImportant)
                         const SizedBox(width: 4),
-
+                      ],
                       Expanded(
                         child: Text(
                           todo.todoText,
