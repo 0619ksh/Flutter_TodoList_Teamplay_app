@@ -1,6 +1,5 @@
 class TodoList {
   // Properties
-
   String todoText;  // 할 일
   String date;      // 날짜
   String time;      // 시간
