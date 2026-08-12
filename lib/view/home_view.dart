@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -13,11 +14,8 @@ class _HomeViewState extends State<HomeView> {
   late List<String> gridTitle;
   late List<String> gridContent;
 
-  // 다른 페이지 구성시 받아야 하는 data
-
-  // 로그인 화면에서 받아올 사용자 ID
-  // Get.argument 로 받기 
-  // late String userId
+  final box = GetStorage();
+  late String userId;
 
   // TodoList 데이터를 저장할 리스트
   // late List<TodoList> todoList;
@@ -55,6 +53,7 @@ class _HomeViewState extends State<HomeView> {
       '최근 위치 2곳',
       '신규 등록 가능'
     ];
+    userId = box.read('p_userId');
 
     // 나중에 로그인 페이지에서 받은 값으로 변경하기
     // userId = '';
@@ -83,7 +82,7 @@ class _HomeViewState extends State<HomeView> {
               height: 60,
             ),
             Text(
-              '안녕하세요,           님 👋', 
+              '안녕하세요, $userId 님 👋', 
 
                 // 로그인 페이지에서 받아온 userId를 출력 $userId
 
