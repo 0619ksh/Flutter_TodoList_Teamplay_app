@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class AddView extends StatefulWidget {
   const AddView({super.key});
@@ -11,15 +13,17 @@ class AddView extends StatefulWidget {
 class _AddViewState extends State<AddView> {
   // Properties
   late TextEditingController todoController;  // 할 일
-  late DateTime selectedDate;                     // 날짜
-  DateTime? selectedTime;                     // 시간
+  late DateTime selectedDate;                 // 날짜
   late String selectedDateText;               // 선택된 날짜 표시 텍스트
+  DateTime? selectedTime;                     // 시간
+  late String selectedTimeText;               // 선택된 날짜 표시 텍스트
 
   // 카테고리
   late List<String> categoryList;
   late String categoryValue;
 
   late bool _isImportant;                     // 중요 여부
+  final box = GetStorage();
 
   @override
   void initState() {
@@ -27,7 +31,8 @@ class _AddViewState extends State<AddView> {
 
     todoController = TextEditingController();
     selectedDate = DateTime.now();
-    selectedDateText = '';
+    selectedDateText = selectedDate.toString().substring(0, 10);
+    selectedTimeText = '';
     categoryList = ["일상", "업무", "건강"];
     categoryValue = "일상";
     _isImportant = false;
@@ -72,10 +77,10 @@ class _AddViewState extends State<AddView> {
                   onDateTimeChanged: (value) {
                     selectedTime = value;
                     setState(() {});
-                    // print(chosenDateTime);
                   },
                 ),
               ),
+              Text(selectedTimeText),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -109,7 +114,8 @@ class _AddViewState extends State<AddView> {
               // 할 일 추가
               ElevatedButton(
                 onPressed: () {
-                  //
+                  saveTodo();
+                  Get.back();
                 },
                 child: Text("추가하기")
               )
@@ -130,16 +136,29 @@ class _AddViewState extends State<AddView> {
 
     final date = await showDatePicker(
       context: context,
-      initialDate: selectedDate,      // 현재 날짜로 초기값 설정
+      initialDate: selectedDate,
       firstDate: firstSelectable,
-      lastDate: lastYear,   // 선택 가능한 년도 범위
+      lastDate: lastYear,
       initialEntryMode: DatePickerEntryMode.calendarOnly,
-      locale: Locale('ko', 'KR')      // 언어 설정
+      locale: Locale('ko', 'KR')
     );
 
     if(date != null) {
-      selectedDateText = "선택하신 일자는 ${date.toString().substring(0, 10)} 입니다.";
+      selectedDateText = date.toString().substring(0, 10);
       setState(() {});
     }
+  }
+
+  // 입력한 데이터 저장
+  void saveTodo() {
+    selectedTimeText = selectedTime != null
+      ? selectedTime.toString().substring(11, 16)
+      : '';
+
+    box.write("_todo", todoController.text.trim());
+    box.write("_date", selectedDateText);
+    box.write("_time", selectedTimeText);
+    box.write("_category", categoryValue);
+    box.write("_important", _isImportant);
   }
 }
