@@ -293,13 +293,13 @@ class _HomeViewState extends State<HomeView> {
           child: TabBar(
 
             // ★ 선택된 아이콘 + 글자 색
-            labelColor: Color(0xFF4A5DBB),
+            labelColor: Theme.of(context).colorScheme.primary,
 
             // ★ 선택되지 않은 아이콘 + 글자 색
             unselectedLabelColor: Color(0xFFADB5C2),
 
             // ★ 기본적으로 생기는 TabBar 밑줄 색깔
-            indicatorColor: Color(0xFF4A5DBB),
+            indicatorColor: Theme.of(context).colorScheme.primary,
 
             // ★ 글자 디자인
             labelStyle: TextStyle(
@@ -384,7 +384,7 @@ class TodoList {
   String todoText;        // 할 일 내용
   DateTime date;          // 할 일 날짜
   boold  isImportant;     // 중요 여부
-  bool isDone;            // 완료 여부
+  bool isCompleted;            // 완료 여부
 
 
   // ---------------- Constructor ----------------
@@ -393,7 +393,7 @@ class TodoList {
     required this.todoText,
     required this.date,
     required this.isImportant,
-    required this.isDone,
+    required this.isCompleted,
   });
 }
 
