@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
+import 'package:todo_ex_app/view/add_view.dart';
 import 'package:todo_ex_app/view/login_view.dart';
 import 'package:todo_ex_app/view/today_view.dart';
 
@@ -14,6 +15,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      
+      // Page 경로 지정
+      initialRoute: '/',
+      getPages: [
+        GetPage(
+          name: '/', 
+          page: () => const TodayView(),
+        ),
+        GetPage(
+          name: '/add', 
+          page: () => const AddView(),
+        ),
+      ],
+
       title: 'Flutter Demo',
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
@@ -25,9 +40,16 @@ class MyApp extends StatelessWidget {
         Locale('en', 'US')
       ],
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const TodayView(),
+
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4A5DBB),
+                      primary: const Color(0xFF4A5DBB),
+                      secondary: const Color(0xFF8EA7E9),
+                      tertiary: const Color(0xFFF4F7FF),
+                      ),
+        ),
+        
+          home: const TodayView(),
+
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import '../model/todo_list.dart';
 
 class TodayView extends StatefulWidget {
@@ -10,51 +11,27 @@ class TodayView extends StatefulWidget {
 }
 
 class _TodayViewState extends State<TodayView> {
-  // 현재 선택된 날짜 (기본값: 오늘)
   DateTime selectedDate = DateTime.now();
+  final box = GetStorage();
 
-  // 원본 전체 할 일 목록
-  List<TodoList> todoItems = [
-    TodoList(
-      todoText: '디자인 시스템 시안 정리',
-      date: DateTime(2026, 8, 12, 11, 0),
-      isImportant: false,
-      isCompleted: false,
-      category: '업무',
-    ),
-    TodoList(
-      todoText: '메일 및 피드백 회신',
-      date: DateTime(2026, 8, 12, 13, 30),
-      isImportant: false,
-      isCompleted: true,
-      category: '일상',
-    ),
-    TodoList(
-      todoText: '마트에서 장보기 (우유, 과일)',
-      date: DateTime(2026, 8, 12, 17, 0),
-      isImportant: false,
-      isCompleted: false,
-      category: '일상',
-    ),
-    TodoList(
-      todoText: '내일 일정 준비하기',
-      date: DateTime(2026, 8, 13, 10, 0),
-      isImportant: false,
-      isCompleted: false,
-      category: '업무',
-    ),
-  ];
+  // 할 일 객체 리스트
+  List<TodoList> todoItems = [];
 
-  // 배운 where 메소드로 selectedDate와 (년, 월, 일)이 일치하는 항목만 추출
-  List<TodoList> get filteredTodoItems {
-    return todoItems.where((todo) {
-      return todo.date.year == selectedDate.year &&
-          todo.date.month == selectedDate.month &&
-          todo.date.day == selectedDate.day;
-    }).toList();
+  @override
+  void initState() {
+    super.initState();
+    // 앱 시작 시 저장된 데이터 불러오기 (배우신 initState 생명주기 활용)
+    _loadSavedTodoFromStorage();
   }
 
-  // 날짜 선택 팝업 함수 (showDatePicker 활용)
+  // 날짜 필터링 (기존 조건문 유지)
+  List<TodoList> get filteredTodoItems {
+    String formattedSelectedDate =
+        '${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}';
+    return todoItems.where((todo) => todo.date == formattedSelectedDate).toList();
+  }
+
+  // showDatePicker를 활용한 날짜 선택 기능
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -63,7 +40,6 @@ class _TodayViewState extends State<TodayView> {
       lastDate: DateTime(2030),
     );
 
-    // 날짜가 선택되었으면 상태 갱신
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
@@ -71,14 +47,41 @@ class _TodayViewState extends State<TodayView> {
     }
   }
 
+  // GetStorage에서 저장된 데이터를 읽어와 TodoList 객체 생성
+  void _loadSavedTodoFromStorage() {
+    final String? todoText = box.read('_todo');
+    final String? date = box.read('_date');
+    final String? time = box.read('_time');
+    final String? category = box.read('_category');
+    final bool? isImportant = box.read('_important');
+
+    if (todoText != null && todoText.isNotEmpty) {
+      final newTodo = TodoList(
+        todoText: todoText,
+        date: date ?? '',
+        time: time ?? '',
+        category: category ?? '일상',
+        isImportant: isImportant ?? false,
+        isCompleted: false,
+      );
+
+      setState(() {
+        todoItems.add(newTodo);
+      });
+
+      // 읽어온 뒤에는 저장소 값 초기화 (중복 추가 방지)
+      box.remove('_todo');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // 선택된 날짜를 "YYYY-MM-DD" 형태로 표현
+    final colorScheme = Theme.of(context).colorScheme;
     String dateTitle =
         '${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')} 할 일';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FF),
+      backgroundColor: colorScheme.tertiary,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -93,24 +96,23 @@ class _TodayViewState extends State<TodayView> {
                 children: [
                   Text(
                     dateTitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1E2022),
+                      color: colorScheme.onSurface,
                     ),
                   ),
-                  // 날짜 선택 달력 팝업을 호출하는 필터 버튼
                   Container(
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEEF1F8),
+                      color: colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.calendar_month_rounded,
-                        color: Color(0xFF7A8299),
+                        color: colorScheme.primary,
                         size: 20,
                       ),
                       onPressed: () => _selectDate(context),
@@ -122,34 +124,34 @@ class _TodayViewState extends State<TodayView> {
 
               // Sub Title
               Row(
-                children: const [
-                  Icon(Icons.west, size: 14, color: Color(0xFFA0A7BA)),
-                  SizedBox(width: 6),
+                children: [
+                  Icon(Icons.west, size: 14, color: colorScheme.outline),
+                  const SizedBox(width: 6),
                   Text(
                     '왼쪽으로 밀어서 할 일을 삭제할 수 있습니다.',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Color(0xFFA0A7BA),
+                      color: colorScheme.outline,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 20),
 
-              // 필터링된 할 일 목록
+              // 필터링된 할 일 목록 (ListView.builder)
               Expanded(
                 child: filteredTodoItems.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: Text(
                           '해당 날짜에 등록된 할 일이 없습니다.',
-                          style: TextStyle(color: Color(0xFFA0A7BA)),
+                          style: TextStyle(color: colorScheme.outline),
                         ),
                       )
                     : ListView.builder(
                         itemCount: filteredTodoItems.length,
                         itemBuilder: (context, index) {
                           final todo = filteredTodoItems[index];
-                          return _buildTodoCard(todo);
+                          return _buildTodoCard(todo, colorScheme);
                         },
                       ),
               ),
@@ -162,25 +164,24 @@ class _TodayViewState extends State<TodayView> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final newTodo = await Get.toNamed('/add');
-          if (newTodo != null && newTodo is TodoList) {
-            setState(() {
-              todoItems.add(newTodo);
-            });
-          }
+          // AddView 화면으로 이동 후 돌아올 때까지 대기 (Get.toNamed)
+          await Get.toNamed('/add');
+          
+          // 복귀 후 GetStorage 데이터 확인 및 리스트 추가
+          _loadSavedTodoFromStorage();
         },
-        backgroundColor: const Color(0xFF5363CE),
+        backgroundColor: colorScheme.primary,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18),
         ),
-        child: const Icon(Icons.add, color: Colors.white, size: 28),
+        child: Icon(Icons.add, color: colorScheme.onPrimary, size: 28),
       ),
     );
   }
 
   // 할 일 카드 위젯
-  Widget _buildTodoCard(TodoList todo) {
+  Widget _buildTodoCard(TodoList todo, ColorScheme colorScheme) {
     return Dismissible(
       key: UniqueKey(),
       direction: DismissDirection.endToStart,
@@ -189,10 +190,10 @@ class _TodayViewState extends State<TodayView> {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
-          color: const Color(0xFFFF6B6B),
+          color: colorScheme.error,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: const Icon(Icons.delete, color: Colors.white),
+        child: Icon(Icons.delete, color: colorScheme.onError),
       ),
       onDismissed: (direction) {
         setState(() {
@@ -204,20 +205,20 @@ class _TodayViewState extends State<TodayView> {
           '${todo.todoText} 항목이 삭제되었습니다.',
           snackPosition: SnackPosition.BOTTOM,
           duration: const Duration(seconds: 2),
-          backgroundColor: Colors.black87,
-          colorText: Colors.white,
+          backgroundColor: colorScheme.inverseSurface,
+          colorText: colorScheme.onInverseSurface,
         );
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           children: [
-            // 체크박스
+            // 체크박스 (GestureDetector / setState)
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -229,18 +230,18 @@ class _TodayViewState extends State<TodayView> {
                 height: 24,
                 decoration: BoxDecoration(
                   color: todo.isCompleted
-                      ? const Color(0xFF818CCB)
-                      : Colors.white,
+                      ? colorScheme.secondary
+                      : colorScheme.surface,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: todo.isCompleted
-                        ? const Color(0xFF818CCB)
-                        : const Color(0xFFD0D5E2),
+                        ? colorScheme.secondary
+                        : colorScheme.outlineVariant,
                     width: 2,
                   ),
                 ),
                 child: todo.isCompleted
-                    ? const Icon(Icons.check, size: 16, color: Colors.white)
+                    ? Icon(Icons.check, size: 16, color: colorScheme.onSecondary)
                     : null,
               ),
             ),
@@ -251,29 +252,41 @@ class _TodayViewState extends State<TodayView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    todo.todoText,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: todo.isCompleted
-                          ? const Color(0xFFC0C5D6)
-                          : const Color(0xFF2C303E),
-                      decoration: todo.isCompleted
-                          ? TextDecoration.lineThrough
-                          : null,
-                    ),
+                  Row(
+                    children: [
+                      // ... (스프레드 연산자) 대신 배우신 일반 if 문 사용
+                      if (todo.isImportant)
+                        Icon(Icons.star, size: 16, color: colorScheme.primary),
+                      if (todo.isImportant)
+                        const SizedBox(width: 4),
+
+                      Expanded(
+                        child: Text(
+                          todo.todoText,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: todo.isCompleted
+                                ? colorScheme.outline
+                                : colorScheme.onSurface,
+                            decoration: todo.isCompleted
+                                ? TextDecoration.lineThrough
+                                : null,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 4),
                   Row(
                     children: [
                       Text(
-                        todo.formattedTime,
+                        todo.time,
                         style: TextStyle(
                           fontSize: 12,
                           color: todo.isCompleted
-                              ? const Color(0xFFC0C5D6)
-                              : const Color(0xFFA0A7BA),
+                              ? colorScheme.outline
+                              : colorScheme.onSurfaceVariant,
                         ),
                       ),
                       const SizedBox(width: 6),
@@ -282,8 +295,8 @@ class _TodayViewState extends State<TodayView> {
                         style: TextStyle(
                           fontSize: 12,
                           color: todo.isCompleted
-                              ? const Color(0xFFC0C5D6)
-                              : const Color(0xFFA0A7BA),
+                              ? colorScheme.outline
+                              : colorScheme.onSurfaceVariant,
                         ),
                       ),
                       const SizedBox(width: 6),
@@ -293,8 +306,8 @@ class _TodayViewState extends State<TodayView> {
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: todo.isCompleted
-                              ? const Color(0xFFC0C5D6)
-                              : const Color(0xFF5A669D),
+                              ? colorScheme.outline
+                              : colorScheme.primary,
                         ),
                       ),
                     ],
