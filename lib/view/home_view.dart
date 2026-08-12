@@ -17,18 +17,18 @@ class _HomeViewState extends State<HomeView> {
   final box = GetStorage();
   late String userId;
 
-  // TodoList 데이터를 저장할 리스트
-  // late List<TodoList> todoList;
-
   // 오늘 날짜에 해당하는 todo 전체 개수
-  // late int todayCount;
+  late int todayCount;
 
   // 오늘 완료한 todo개수
-  // late int doneCount;
+  late int doneCount;
+  
+  // 오늘 남은 todo개수
+  late int remainingCount;
 
   // 오늘 할 일 달성률
   // 완료개 수 / 전체개수 * 100  -> 소수점 없이
-  // late double percent;
+  late double percent;
 
   @override
   void initState() {
@@ -55,17 +55,17 @@ class _HomeViewState extends State<HomeView> {
     ];
     userId = box.read('p_userId');
 
-    // 나중에 로그인 페이지에서 받은 값으로 변경하기
-    // userId = '';
-
     // 나중에 todayView의 실제 todo 데이터와 연결
-    // todayCount = 0;
+    todayCount = box.read('todayCount');
 
     // 체크 된 todo 개수 받아오기
-    // doneCount = 0;
-
+    doneCount = box.read('doneCount');
+   
+    // 남은 todo 계산
+    remainingCount = todayCount - doneCount;
     // 달성률 계산
-    // percnet = todayCount == 0 ? 0 : doneCount / todayCount * 100;
+    percent = todayCount == 0 
+    ? 0 : doneCount / todayCount * 100;
   }
 
 
