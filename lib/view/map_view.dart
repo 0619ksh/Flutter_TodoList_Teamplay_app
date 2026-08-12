@@ -82,15 +82,11 @@ class _MapViewState extends State<MapView> {
               width: 40,
               height: 40,
               point: latlng.LatLng(latData, longData), 
-              child: Column(
-                children: [
-                  Icon(
-                      Icons.pin_drop,
-                      size: 50,
-                      color: Colors.red,
-                    ),
-                ],
-              ),
+              child: Icon(
+                  Icons.pin_drop,
+                  size: 50,
+                  color: Colors.red,
+                ),
             ),
           ]
         ),

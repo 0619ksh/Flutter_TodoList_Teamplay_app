@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:todo_ex_app/view/add_view.dart';
 import 'package:todo_ex_app/view/login_view.dart';
 
-import 'view/map_view.dart';
 
 void main() {
   runApp(const MyApp());
