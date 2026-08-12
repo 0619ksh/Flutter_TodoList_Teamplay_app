@@ -132,6 +132,7 @@ class _AddViewState extends State<AddView> {
                   ),
                 ),
               ),
+              SizedBox(height: 10),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -143,7 +144,12 @@ class _AddViewState extends State<AddView> {
                     items: categoryList.map((String item) {
                       return DropdownMenuItem(
                         value: item,
-                        child: Text(item)
+                        child: Text(
+                          item,
+                          style: TextStyle(
+                            fontSize: 18
+                          ),
+                        )
                       );
                     },).toList(), 
                     onChanged: (value) {
@@ -153,7 +159,13 @@ class _AddViewState extends State<AddView> {
                   ),
                   SizedBox(width: 50.0),
                   // 중요 여부 선택
-                  Text("중요"),
+                  Text(
+                    "중요",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
                   Checkbox(
                     value: _isImportant,
                     onChanged: (value) {
