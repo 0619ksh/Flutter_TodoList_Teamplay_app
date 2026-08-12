@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '../model/todo_list.dart';
 
-
 class TodayView extends StatefulWidget {
   const TodayView({super.key});
 
@@ -15,36 +14,35 @@ class _TodayViewState extends State<TodayView> {
   DateTime selectedDate = DateTime.now();
   final box = GetStorage();
 
-  // 할 일 객체 리스트
+  // 전체 할 일 리스트
   List<TodoList> todoItems = [];
 
   @override
   void initState() {
     super.initState();
-
     _loadSavedTodoFromStorage();
 
-    // 오늘 할 일 개수 저장
-    saveTodayCount();
+    // ★ 저장소(todo_list)에 변화가 생기면 자동 데이터 갱신[cite: 27]
+    box.listenKey('todo_list', (value) {
+      if (mounted) {
+        _loadSavedTodoFromStorage();
+      }
+    });
   }
 
-  // 날짜 필터링
+  // 날짜 필터링[cite: 27]
   List<TodoList> get filteredTodoItems {
     String formattedSelectedDate =
         '${selectedDate.year}-'
         '${selectedDate.month.toString().padLeft(2, '0')}-'
         '${selectedDate.day.toString().padLeft(2, '0')}';
 
-    List<TodoList> result = [];
-
-    for (int i = 0; i < todoItems.length; i++) {
-      if (todoItems[i].date == formattedSelectedDate) {
-        result.add(todoItems[i]);
-      }
-    }
-    return result;
+    return todoItems
+        .where((item) => item.date == formattedSelectedDate)
+        .toList();
   }
-  // 날짜 선택
+
+  // 날짜 선택[cite: 27]
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -58,55 +56,51 @@ class _TodayViewState extends State<TodayView> {
       });
     }
   }
-  // GetStorage에서 저장된 Todo 읽어오기
-  void _loadSavedTodoFromStorage() {
-    final String? todoText = box.read('_todo');
-    final String? date = box.read('_date');
-    final String? time = box.read('_time');
-    final String? category = box.read('_category');
-    final bool? isImportant = box.read('_important');
 
-    if (todoText != null && todoText.isNotEmpty) {
-      final newTodo = TodoList(
-        todoText: todoText,
-        date: date ?? '',
-        time: time ?? '',
-        category: category ?? '일상',
-        isImportant: isImportant ?? false,
-        isCompleted: false,
-      );
-      setState(() {
-        todoItems.add(newTodo);
-      });
-      // Todo 추가 후 개수 다시 저장
-      saveTodayCount();
-      // 중복 추가 방지
-      box.remove('_todo');
-    }
+  // GetStorage에서 저장된 전체 Todo 목록 불러오기[cite: 27]
+  void _loadSavedTodoFromStorage() {
+    List<dynamic> rawList = box.read<List<dynamic>>('todo_list') ?? [];
+    
+    setState(() {
+      todoItems = rawList
+          .map((e) => TodoList.fromRawString(e.toString()))
+          .toList();
+    });
+
+    saveTodayCount();
   }
-  // 오늘 할 일 개수 / 완료 개수 계산
+
+  // 변경된 전체 Todo 리스트를 GetStorage에 갱신 저장[cite: 27]
+  void _saveAllToStorage() {
+    List<String> rawList = todoItems.map((e) => e.toRawString()).toList();
+    box.write('todo_list', rawList);
+    saveTodayCount();
+  }
+
+  // 오늘 할 일 개수 / 완료 개수 계산하여 HomeView용 저장[cite: 27]
   void saveTodayCount() {
     DateTime now = DateTime.now();
     String today =
         '${now.year}-'
         '${now.month.toString().padLeft(2, '0')}-'
         '${now.day.toString().padLeft(2, '0')}';
+    
     int todayCount = 0;
     int doneCount = 0;
-    for (int i = 0; i < todoItems.length; i++) {
-      // 오늘 날짜인지 확인
-      if (todoItems[i].date == today) {
+
+    for (var item in todoItems) {
+      if (item.date == today) {
         todayCount++;
-        // 완료된 할 일인지 확인
-        if (todoItems[i].isCompleted == true) {
+        if (item.isCompleted) {
           doneCount++;
         }
       }
     }
-    // HomeView에서 사용할 값 저장
+
     box.write('todayCount', todayCount);
     box.write('doneCount', doneCount);
   }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -114,6 +108,7 @@ class _TodayViewState extends State<TodayView> {
         '${selectedDate.year}-'
         '${selectedDate.month.toString().padLeft(2, '0')}-'
         '${selectedDate.day.toString().padLeft(2, '0')} 할 일';
+
     return Scaffold(
       backgroundColor: colorScheme.tertiary,
       body: SafeArea(
@@ -185,14 +180,9 @@ class _TodayViewState extends State<TodayView> {
                       )
                     : ListView.builder(
                         itemCount: filteredTodoItems.length,
-
                         itemBuilder: (context, index) {
                           final todo = filteredTodoItems[index];
-
-                          return _buildTodoCard(
-                            todo,
-                            colorScheme,
-                          );
+                          return _buildTodoCard(todo, colorScheme);
                         },
                       ),
               ),
@@ -200,8 +190,7 @@ class _TodayViewState extends State<TodayView> {
           ),
         ),
       ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await Get.toNamed('/add');
@@ -221,7 +210,7 @@ class _TodayViewState extends State<TodayView> {
     );
   }
 
-  // 할 일 카드
+  // 할 일 카드[cite: 27]
   Widget _buildTodoCard(
     TodoList todo,
     ColorScheme colorScheme,
@@ -246,8 +235,7 @@ class _TodayViewState extends State<TodayView> {
         setState(() {
           todoItems.remove(todo);
         });
-        // 삭제 후 개수 다시 저장
-        saveTodayCount();
+        _saveAllToStorage();
 
         Get.snackbar(
           '삭제 완료',
@@ -275,8 +263,7 @@ class _TodayViewState extends State<TodayView> {
                 setState(() {
                   todo.isCompleted = !todo.isCompleted;
                 });
-                // 체크 후 완료 개수 다시 저장
-                saveTodayCount();
+                _saveAllToStorage();
               },
               child: Container(
                 width: 24,
@@ -293,7 +280,6 @@ class _TodayViewState extends State<TodayView> {
                     width: 2,
                   ),
                 ),
-
                 child: todo.isCompleted
                     ? Icon(
                         Icons.check,
@@ -316,20 +302,16 @@ class _TodayViewState extends State<TodayView> {
                           size: 16,
                           color: colorScheme.primary,
                         ),
-                      if (todo.isImportant)
-                        const SizedBox(width: 4),
+                      if (todo.isImportant) const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           todo.todoText,
-
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-
                             color: todo.isCompleted
                                 ? colorScheme.outline
                                 : colorScheme.onSurface,
-
                             decoration: todo.isCompleted
                                 ? TextDecoration.lineThrough
                                 : null,

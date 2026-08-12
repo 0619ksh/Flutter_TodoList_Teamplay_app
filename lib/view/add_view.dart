@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import '../model/todo_list.dart';
 
 class AddView extends StatefulWidget {
   const AddView({super.key});
@@ -40,17 +41,21 @@ class _AddViewState extends State<AddView> {
   }
 
   @override
+  void dispose() {
+    todoController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       backgroundColor: colorScheme.tertiary,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "할 일 추가",
-          style: TextStyle(
-            fontWeight: FontWeight.bold
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: colorScheme.secondary,
         foregroundColor: colorScheme.onSecondary,
@@ -62,17 +67,17 @@ class _AddViewState extends State<AddView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
 
               // 할 일 입력 TextField
               TextField(
                 controller: todoController,
-                decoration: InputDecoration(
-                  labelText: "할 일을 입력하세요"
+                decoration: const InputDecoration(
+                  labelText: "할 일을 입력하세요",
                 ),
                 maxLines: 1,
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               // 날짜 선택 버튼 -> showDatePicker
               ElevatedButton(
@@ -80,41 +85,35 @@ class _AddViewState extends State<AddView> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: colorScheme.primary,
                   foregroundColor: colorScheme.onPrimary,
-                  minimumSize: Size(110, 45)
+                  minimumSize: const Size(110, 45),
                 ),
-                child: Text(
+                child: const Text(
                   "날짜 선택",
-                  style: TextStyle(
-                    fontSize: 17
-                  ),
-                )
+                  style: TextStyle(fontSize: 17),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   selectedDateText,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 30,
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
 
               // 시간 선택
-              Text(
+              const Text(
                 "시간 선택",
-                style: TextStyle(
-                  fontSize: 20
-                ),
+                style: TextStyle(fontSize: 20),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey
-                    ),
-                    borderRadius: BorderRadius.circular(10)
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: SizedBox(
                     width: 300,
@@ -132,44 +131,44 @@ class _AddViewState extends State<AddView> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // 카테고리 선택
-                  DropdownButton(
+                  DropdownButton<String>(
                     value: categoryValue,
-                    icon: Icon(Icons.keyboard_arrow_down),
+                    icon: const Icon(Icons.keyboard_arrow_down),
                     items: categoryList.map((String item) {
                       return DropdownMenuItem(
                         value: item,
                         child: Text(
                           item,
-                          style: TextStyle(
-                            fontSize: 18
-                          ),
-                        )
+                          style: const TextStyle(fontSize: 18),
+                        ),
                       );
-                    },).toList(), 
+                    }).toList(), 
                     onChanged: (value) {
-                      categoryValue = value.toString();
-                      setState(() {});
+                      if (value != null) {
+                        categoryValue = value;
+                        setState(() {});
+                      }
                     },
                   ),
-                  SizedBox(width: 50.0),
+                  const SizedBox(width: 50.0),
                   // 중요 여부 선택
-                  Text(
+                  const Text(
                     "중요",
                     style: TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.bold
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   Checkbox(
                     value: _isImportant,
                     onChanged: (value) {
-                      _isImportant = value!;
+                      _isImportant = value ?? false;
                       setState(() {});
                     },
                   )
@@ -181,26 +180,26 @@ class _AddViewState extends State<AddView> {
                 padding: const EdgeInsets.all(30.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    if(todoController.text.trim().isEmpty) {
+                    if (todoController.text.trim().isEmpty) {
                       showErrorSnackbar(colorScheme);
                       return;
                     }
                     
                     saveTodo();
-                    Get.back();
+                    Get.back(result: true);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colorScheme.primary,
                     foregroundColor: colorScheme.onPrimary,
-                    minimumSize: Size(200, 50)
+                    minimumSize: const Size(200, 50),
                   ),
-                  child: Text(
+                  child: const Text(
                     "추가하기",
                     style: TextStyle(
                       fontSize: 25,
-                      fontWeight: FontWeight.bold
+                      fontWeight: FontWeight.bold,
                     ),
-                  )
+                  ),
                 ),
               )
             ],
@@ -211,7 +210,6 @@ class _AddViewState extends State<AddView> {
   }
 
   // Functions
-  // DatePicker로 날짜 선택
   void displayDatePicker() async {
     final firstSelectable = DateTime(
       selectedDate.year, selectedDate.month, selectedDate.day
@@ -224,34 +222,43 @@ class _AddViewState extends State<AddView> {
       firstDate: firstSelectable,
       lastDate: lastYear,
       initialEntryMode: DatePickerEntryMode.calendarOnly,
-      locale: Locale('ko', 'KR')
+      locale: const Locale('ko', 'KR'),
     );
 
-    if(date != null) {
+    if (date != null) {
       selectedDateText = date.toString().substring(0, 10);
       setState(() {});
     }
   }
 
-  // 할 일을 입력하지 않았을 때 Snackbar 출력
   void showErrorSnackbar(ColorScheme colorScheme) {
     Get.snackbar(
       "경고", "할 일을 입력하세요",
       snackPosition: SnackPosition.BOTTOM,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
       backgroundColor: colorScheme.error,
-      colorText: colorScheme.onError
+      colorText: colorScheme.onError,
     );
   }
 
-  // 입력한 데이터 저장
+  // 입력한 데이터 목록에 추가 및 저장
   void saveTodo() {
     selectedTimeText = selectedTime.toString().substring(11, 16);
 
-    box.write("_todo", todoController.text.trim());
-    box.write("_date", selectedDateText);
-    box.write("_time", selectedTimeText);
-    box.write("_category", categoryValue);
-    box.write("_important", _isImportant);
+    TodoList newTodo = TodoList(
+      todoText: todoController.text.trim(),
+      date: selectedDateText,
+      time: selectedTimeText,
+      category: categoryValue,
+      isImportant: _isImportant,
+      isCompleted: false,
+    );
+
+    // 기존 저장된 raw 리스트 불러오기
+    List<dynamic> rawList = box.read<List<dynamic>>('todo_list') ?? [];
+    List<String> todoList = rawList.map((e) => e.toString()).toList();
+
+    todoList.add(newTodo.toRawString());
+    box.write('todo_list', todoList);
   }
 }

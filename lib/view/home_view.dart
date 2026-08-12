@@ -237,7 +237,7 @@ class _HomeViewState extends State<HomeView> {
 
                     return GestureDetector(
 
-                      onTap: () {
+                      onTap: () async{
 
                         if (index == 0) {
 
@@ -245,11 +245,15 @@ class _HomeViewState extends State<HomeView> {
                           widget.changeTab(1);
 
                         } else if (index == 1) {
-
-                          // 할 일 추가 → AddView
-                          Get.toNamed('/add');
-
-                        } else if (index == 2) {
+  // 할 일 추가 → AddView 이동 후 결과 대기[cite: 23]
+  final result = await Get.toNamed('/add');
+  
+  if (result == true) {
+    // 추가에 성공했다면 TodayView(1번 탭)로 이동하며 홈 화면 개수도 갱신[cite: 23]
+    widget.changeTab(1);
+    setState(() {});
+  }
+}else if (index == 2) {
 
                           // 지도 메뉴 → MapView
                           widget.changeTab(2);
