@@ -15,7 +15,7 @@ class _AddViewState extends State<AddView> {
   late TextEditingController todoController;  // 할 일
   late DateTime selectedDate;                 // 날짜
   late String selectedDateText;               // 선택된 날짜 표시 텍스트
-  DateTime? selectedTime;                     // 시간
+  late DateTime selectedTime;                 // 시간
   late String selectedTimeText;               // 선택된 날짜 표시 텍스트
 
   // 카테고리
@@ -32,7 +32,8 @@ class _AddViewState extends State<AddView> {
     todoController = TextEditingController();
     selectedDate = DateTime.now();
     selectedDateText = selectedDate.toString().substring(0, 10);
-    selectedTimeText = '';
+    selectedTime = DateTime.now();
+    selectedTimeText = selectedTime.toString().substring(11, 16);
     categoryList = ["일상", "업무", "건강"];
     categoryValue = "일상";
     _isImportant = false;
@@ -45,9 +46,9 @@ class _AddViewState extends State<AddView> {
         title: Text("할 일 추가"),
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Center(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -59,28 +60,53 @@ class _AddViewState extends State<AddView> {
                 ),
                 maxLines: 1,
               ),
+              SizedBox(height: 30),
               // 날짜 선택 버튼 -> showDatePicker
               ElevatedButton(
                 onPressed: () => displayDatePicker(),
                 child: Text("날짜 선택")
               ),
-              Text(selectedDateText),
-              // 시간 선택
-              Text("시간 선택"),
-              SizedBox(
-                width: 300,
-                height: 200,
-                child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.time,
-                  initialDateTime: DateTime.now(),
-                  use24hFormat: false,
-                  onDateTimeChanged: (value) {
-                    selectedTime = value;
-                    setState(() {});
-                  },
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  selectedDateText,
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold
+                  ),
                 ),
               ),
-              Text(selectedTimeText),
+              // 시간 선택
+              Text(
+                "시간 선택",
+                style: TextStyle(
+                  fontSize: 20
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey
+                    ),
+                    borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: SizedBox(
+                    width: 300,
+                    height: 200,
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.time,
+                      initialDateTime: DateTime.now(),
+                      use24hFormat: false,
+                      onDateTimeChanged: (value) {
+                        selectedTime = value;
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -112,12 +138,20 @@ class _AddViewState extends State<AddView> {
                 ],
               ),
               // 할 일 추가
-              ElevatedButton(
-                onPressed: () {
-                  saveTodo();
-                  Get.back();
-                },
-                child: Text("추가하기")
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    if(todoController.text.trim().isEmpty) {
+                      showErrorSnackbar();
+                      return;
+                    }
+                    
+                    saveTodo();
+                    Get.back();
+                  },
+                  child: Text("추가하기")
+                ),
               )
             ],
           ),
@@ -149,11 +183,16 @@ class _AddViewState extends State<AddView> {
     }
   }
 
+  // 할 일을 입력하지 않았을 때 Snackbar 출력
+  void showErrorSnackbar() {
+    Get.snackbar(
+      "경고", "할 일을 입력하세요"
+    );
+  }
+
   // 입력한 데이터 저장
   void saveTodo() {
-    selectedTimeText = selectedTime != null
-      ? selectedTime.toString().substring(11, 16)
-      : '';
+    selectedTimeText = selectedTime.toString().substring(11, 16);
 
     box.write("_todo", todoController.text.trim());
     box.write("_date", selectedDateText);
