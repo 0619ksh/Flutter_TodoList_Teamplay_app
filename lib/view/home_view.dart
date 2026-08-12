@@ -20,7 +20,7 @@ class _HomeViewState extends State<HomeView> {
   // 오늘 날짜에 해당하는 todo 전체 개수
   late int todayCount;
 
-  // 오늘 완료한 todo개수
+  // 오늘 완료한 todo개수p
   late int doneCount;
   
   // 오늘 남은 todo개수
@@ -122,9 +122,7 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     ),
                     Text(
-                      '      %',
-
-                      // ${percent.toStringAsFixed(0)%}
+                        '  ${percent.toStringAsFixed(0)}%',
 
                       style: TextStyle(
                         fontSize: 40,
