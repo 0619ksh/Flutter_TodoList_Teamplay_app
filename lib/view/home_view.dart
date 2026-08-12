@@ -16,9 +16,11 @@ class _HomeViewState extends State<HomeView> {
   // 다른 페이지 구성시 받아야 하는 data
 
   // 로그인 화면에서 받아올 사용자 ID
-  // Get.argument나 String userId = GetStorage().read('userId'); 로 받기
-  // 
+  // Get.argument 로 받기 
   // late String userId
+
+  // TodoList 데이터를 저장할 리스트
+  // late List<TodoList> todoList;
 
   // 오늘 날짜에 해당하는 todo 전체 개수
   // late int todayCount;
@@ -104,7 +106,7 @@ class _HomeViewState extends State<HomeView> {
               width: 350,
               height: 100,
               decoration: BoxDecoration(
-                color:  Color(0xFF4A5DBB),
+                color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Padding(
@@ -153,7 +155,7 @@ class _HomeViewState extends State<HomeView> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadiusGeometry.circular(20),
               ),
-               color:  Color(0xFFF4F7FF),
+               color: Theme.of(context).colorScheme.tertiary,
               child: SizedBox(
                 height: 450,
                 child: GridView.builder(
@@ -182,13 +184,13 @@ class _HomeViewState extends State<HomeView> {
                             Container(
                               padding: EdgeInsets.all(7),
                               decoration: BoxDecoration(
-                                color: Color(0xFFF4F7FF),
+                                color: Theme.of(context).colorScheme.tertiary,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Icon(
                                 gridIcon[index],
                                 size: 35,
-                                color: Color(0xFF4A5DBB),
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                             ),
                             SizedBox(
@@ -379,18 +381,18 @@ class _HomeViewState extends State<HomeView> {
 class TodoList {
   // ---------------- Property ----------------
 
-  String workList;   // 할 일 내용
-  DateTime date;     // 할 일 날짜
-  String time;       // 할 일 시간
-  bool isDone;       // 완료 여부
+  String todoText;        // 할 일 내용
+  DateTime date;          // 할 일 날짜
+  boold  isImportant;     // 중요 여부
+  bool isDone;            // 완료 여부
 
 
   // ---------------- Constructor ----------------
 
   TodoList({
-    required this.workList,
+    required this.todoText,
     required this.date,
-    required this.time,
+    required this.isImportant,
     required this.isDone,
   });
 }

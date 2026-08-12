@@ -24,8 +24,12 @@ class MyApp extends StatelessWidget {
         Locale('en', 'US')
       ],
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4A5DBB),
+                      primary: const Color(0xFF4A5DBB),
+                      secondary: const Color(0xFF8EA7E9),
+                      tertiary: const Color(0xFFF4F7FF),
+                      ),
+                    ),
       home: const LoginView(),
     );
   }
