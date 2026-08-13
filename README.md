@@ -1,4 +1,4 @@
-# 📝 todo_ex_app
+# 📝 todo_ex_app (Haru Plan)
 
 Team 3 Todo List App
   :  사용자가 할 일을 등록하고 관리할 수 있으며,
