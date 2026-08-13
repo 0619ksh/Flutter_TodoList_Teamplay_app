@@ -33,10 +33,11 @@ https://youtu.be/SnKZbyZhNg0?si=1gYCNF9D49UxdJPs
 ---
 
 ## 🛠️ Development
-
 - Flutter / Dart
-- StatefulWidget
-- ListView.builder
-- TabBar / TabBarView
+
+## Packages
 - GetX
-- GetStorage
+- get_storage
+- geolocator
+- flutter_map
+- latlong2
