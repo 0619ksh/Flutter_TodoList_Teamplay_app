@@ -37,3 +37,4 @@ https://youtu.be/SnKZbyZhNg0?si=1gYCNF9D49UxdJPs
 - Dart
 - GetX
 - StatefulWidget
+- ListView.builder
