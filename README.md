@@ -36,6 +36,7 @@ https://youtu.be/SnKZbyZhNg0?si=1gYCNF9D49UxdJPs
 - Flutter / Dart
 
 ## Packages
+- flutter_localizations
 - GetX
 - get_storage
 - geolocator
