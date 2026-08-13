@@ -13,7 +13,7 @@ Team 3 Todo List App
 ## ✨ 주요 기능
 
  - 로그인 화면
- -  TOdo List 조회 및 관리
+ -  Todo List 조회 및 관리
  -  새로운 할 일 추가
  -  오늘의 할 일 확인
  -  달성률 확인
